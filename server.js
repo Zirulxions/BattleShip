@@ -13,3 +13,7 @@ http.listen(port, function(){
   console.log('Lisening... The port is:'  + port);
   console.log('Waiting For Players...');
 });
+
+io.on('connection', function(socket) {
+  console.log('User Logged..!');
+});
