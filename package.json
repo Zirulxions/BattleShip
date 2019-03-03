@@ -1,0 +1,14 @@
+{
+  "name": "NodeBattleship",
+  "version": "0.0.1",
+  "description": "Multiplayer Battleship with NodeJS and Socket.io",
+  "author": {
+    "name": "Javier Delgado y Raul Malagarriga"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "html-entities": "1.1.2",
+    "node": "^11.10.0",
+    "socket.io": "1.3.5"
+  }
+}
