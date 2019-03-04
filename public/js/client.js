@@ -1,7 +1,7 @@
 var socket = io();
 
 $(function() {
-
+  console.log("testing jquery");
   //Connect to server event
   socket.on('connect', function() {
     console.log('Connected to server.');
@@ -15,6 +15,17 @@ $(function() {
     $('#waiting-room').hide();
     $('#game').hide();
     $('#disconnected').show();
+    console.log("functions executed");
   });
-  
+
+  //Join Game
+  socket.on('join', function(gameId) {
+    Game.initGame();
+    $('#messages').empty();
+    $('#disconnected').hide();
+    $('#waiting-room').hide();
+    $('#game').show();
+    $('#game-number').html(gameId);
+  })
+
 });

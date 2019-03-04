@@ -2,6 +2,7 @@ var Ship = require('./ship.js');
 var Settings = require('./settings.js');
 
 function Player(id){
+  console.log("testing player");
   var i;
   this.id = id;
   this.shots = Array(Settings.gridRows * Settings.gridCols);
