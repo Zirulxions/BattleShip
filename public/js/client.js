@@ -16,5 +16,5 @@ $(function() {
     $('#game').hide();
     $('#disconnected').show();
   });
-
+  
 });
