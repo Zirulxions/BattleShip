@@ -26,6 +26,22 @@ $(function() {
     $('#waiting-room').hide();
     $('#game').show();
     $('#game-number').html(gameId);
-  })
+  });
+
+  //Update Grid and Turn.
+  socket.on('update', function(gameState) {
+
+  });
+
+  //Leave game and join waiting room.
+  socket.on('leave', function() {
+    $('#game').hide();
+    $('#waiting-room').show();
+  });
 
 });
+
+function sendLeaveRequest(e) {
+  e.preventDefault();
+  socket.emit('leave');
+}
