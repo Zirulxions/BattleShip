@@ -1,3 +1,4 @@
+//Ship Settings
 function Ship(size) {
   this.x = 0;
   this.y = 0;

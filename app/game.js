@@ -1,3 +1,4 @@
+//Setting player(s)
 var Player = require('./player.js');
 var GameStatus = require('./gameStatus.js');
 
@@ -10,5 +11,9 @@ function BattleshipGame(id, idPlayer1, idPlayer2) {
   console.log("test");
   this.players = [new Player(idPlayer1), new Player(idPlayer2)];
 }
+
+BattleshipGame.prototype.getPlayerId = function(player) {
+  return this.players[player].id;
+};
 
 module.exports = BattleshipGame;
