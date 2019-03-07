@@ -32,9 +32,11 @@ var Game = (function(){
 
   //Fire event
   canvas[1].addEventListener('click', function(e) {
-    var pos = getCanvasCoordinates(e, canvas[1]);
-    var square = getSquare(pos.x, pos.y);
-    sendShot(square);
+    if(turn) {
+      var pos = getCanvasCoordinates(e, canvas[1]);
+      var square = getSquare(pos.x, pos.y);
+      sendShot(square);
+    }
   });
 
   function getSquare(x, y) {
