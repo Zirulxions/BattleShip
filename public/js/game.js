@@ -37,70 +37,20 @@ var Game = (function(){
     sendShoot(square);
   });
 
-  function drawSquares(gridIndex){
-    var i,j,squareX,squareY;
-    context[gridIndex].fillStyle = '#222222'
-    context[gridIndex].fillRect(0,0,gridWidth,gridHeight);
-    for(i = 0; i < gridRows; i++){
-      for(j = 0; j < gridCols; j++){
-        squareX = j * (squareWidth + gridBorder) + gridBorder;
-        squareY = i * (squareHeight + gridBorder) + gridBorder;
-        context[gridIndex].fillStyle = '#7799FF'
-        //Highlight square if: user s turn and hover
-        if(j === squareHover.x && i === squareHover.y && gridIndex === 1 && grid[gridIndex].shots[i * gridCols + j] === 0 && turn) {
-          context[gridIndex].fillStyle = '#4477FF';
-        }
-        context[gridIndex].fillRect(squareX, squareY, squareWidth, squareHeight);
-        }
-      }
+  function getSquare(x, y) {
+    return {
+      x: Math.floor(x / (gridWidth / gridCols)),
+      y: Math.floor(y / (gridHeight / gridRows))
     };
+  };
 
-    //draw visible ships on grid
-    function drawShips(gridIndex) {
-      var ship, i, x, y,
-      shipWidth, shipLength;
-      context[gridIndex].fillStyle = '#444444';
-      for(i = 0; i < grid[gridIndex].ships.length; i++) {
-        ship = grid[gridIndex].ships[i];
-        x = ship.x * (squareWidth + gridBorder) + gridBorder + shipPadding;
-        y = ship.y * (squareHeight + gridBorder) + gridBorder + shipPadding;
-        shipWidth = squareWidth - shipPadding * 2;
-        shipLength = squareWidth * ship.size + (gridBorder * (ship.size - 1)) - shipPadding * 2;
-        if(ship.horizontal) {
-          context[gridIndex].fillRect(x, y, shipLength, shipWidth);
-        } else {
-          context[gridIndex].fillRect(x, y, shipWidth, shipLength);
-        }
-      }
+  function getCanvasCoordinates(event, canvas) {
+    rect = canvas.getBoundingClientRect();
+    return {
+      x: Math.round((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width),
+      y: Math.round((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height)
     };
-
-  //draw shot s marks
-  function drawMarks(gridIndex) {
-    var i, j, squareX, squareY;
-    for(i = 0; i < gridRows; i++) {
-      for(j = 0; j < gridCols; j++) {
-        squareX = j * (squareWidth + gridBorder) + gridBorder;
-        squareY = i * (squareHeight + gridBorder) + gridBorder;
-        // draw black cross if there is a missed shot on square
-        if(grid[gridIndex].shots[i * gridCols + j] === 1) {
-          context[gridIndex].beginPath();
-          context[gridIndex].moveTo(squareX + markPadding, squareY + markPadding);
-          context[gridIndex].lineTo(squareX + squareWidth - markPadding, squareY + squareHeight - markPadding);
-          context[gridIndex].moveTo(squareX + squareWidth - markPadding, squareY + markPadding);
-          context[gridIndex].lineTo(squareX + markPadding, squareY + squareHeight - markPadding);
-          context[gridIndex].strokeStyle = '#000000';
-          context[gridIndex].stroke();
-        }
-        // draw red circle if hit on square
-        else if(grid[gridIndex].shots[i * gridCols + j] === 2) {
-          context[gridIndex].beginPath();
-          context[gridIndex].arc(squareX + squareWidth / 2, squareY + squareWidth / 2, squareWidth / 2 - markPadding, 0, 2 * Math.PI, false);
-          context[gridIndex].fillStyle = '#E62E2E';
-          context[gridIndex].fill();
-          }
-        }
-      }
-    };
+  };
 
   //new game
   function initGame() {
@@ -118,6 +68,24 @@ var Game = (function(){
     drawGrid(0);
     drawGrid(1);
   };
+
+  function updateGrid(player, gridState) {
+    grid[player] = gridState;
+    drawGrid(player);
+  };
+
+  function setGameOver(isWinner) {
+    gameStatus = GameStatus.gameOver;
+    turn = false;
+    if(isWinner) {
+      $('#turn-status').removeClass('alert-opponent-turn').removeClass('alert-your-turn')
+              .addClass('alert-winner').html('You won! <a href="#" class="btn-leave-game">Play again</a>.');
+    } else {
+      $('#turn-status').removeClass('alert-opponent-turn').removeClass('alert-your-turn')
+              .addClass('alert-loser').html('You lost. <a href="#" class="btn-leave-game">Play again</a>.');
+    }
+    $('.btn-leave-game').click(sendLeaveRequest);
+  }
 
   function drawGrid(gridIndex) {
     drawSquares(gridIndex);
@@ -191,5 +159,7 @@ var Game = (function(){
 
   return {
     'initGame': initGame,
+    'setGameOver': setGameOver,
+    'updateGrid': updateGrid
   };
 })();
