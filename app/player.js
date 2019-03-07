@@ -6,7 +6,7 @@ function Player(id){
   var i;
   this.id = id;
   this.shots = Array(Settings.gridRows * Settings.gridCols);
-  this.shipGrid = Array(Settings.gridRows * Settings.shipCols);
+  this.shipGrid = Array(Settings.gridRows * Settings.gridCols);
   this.ships = [];
   for (var i = 0; i < Settings.gridRows * Settings.shipCols; i++) {
     this.shots[i] = 0;
@@ -56,19 +56,20 @@ Player.prototype.getShipsLeft = function() {
 Player.prototype.createRandomShips = function() {
   var shipIndex;
   for(shipIndex = 0; shipIndex < Settings.ships.length; shipIndex++){
-    this.ships.push(ship);
+    ship = new Ship(Settings.ships[shipIndex]);
     if (!this.placeShipsRandom(ship, shipIndex)) {
       return false;
     }
+    this.ships.push(ship);
   }
   return true;
 };
 
 Player.prototype.placeShipsRandom = function (ship, shipIndex) {
   var tryMax = 25, i, j, gridIndex, xMax, yMax;
-  for(var i = 0; i < tryMax){
+  for(i = 0; i < tryMax; i++){
     ship.horizontal = Math.random() < 0.5;
-    console.log("Generated times: " + i);
+    console.log("Generate: " + i);
     xMax = ship.horizontal ? Settings.gridCols - ship.size + 1 : Settings.gridCols;
     yMax = ship.horizontal ? Settings.gridRows : Settings.gridRows - ship.size + 1;
     ship.x = Math.floor(Math.random() * xMax);

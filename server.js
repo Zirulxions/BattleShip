@@ -49,14 +49,19 @@ io.on('connection', function(socket) {
 
   //leave game request
   socket.on('leave', function() {
-
+    if(users[socket.id].inGame !== null) {
+        leaveGame(socket);
+        socket.join('waiting room');
+        joinWaitingPlayers();
+      }
   });
 
   //client disconect
   socket.on('disconnect', function() {
-
+    console.log((new Date().toISOString()) + ' ID ' + socket.id + ' disconnected.');
+    leaveGame(socket);
+    delete users[socket.id];
   });
-
   joinWaitingPlayers();
 });
 
@@ -77,15 +82,31 @@ function joinWaitingPlayers() {
     users[players[0].id].inGame = game;
     users[players[1].id].inGame = game;
     io.to('game' + game.id).emit('join', game.id);
-
     // send initial ship placements
     io.to(players[0].id).emit('update', game.getGameState(0, 0));
     io.to(players[1].id).emit('update', game.getGameState(1, 1));
-
     console.log((new Date().toISOString()) + " " + players[0].id + " and " + players[1].id + " have joined game ID " + game.id);
   }
 }
 
+function leaveGame(socket) {
+  if(users[socket.id].inGame !== null) {
+    console.log((new Date().toISOString()) + ' ID ' + socket.id + ' left game ID ' + users[socket.id].inGame.id);
+    // Notifty opponent
+    socket.broadcast.to('game' + users[socket.id].inGame.id).emit('notification', {
+      message: 'Opponent has left the game'
+    });
+    if(users[socket.id].inGame.gameStatus !== GameStatus.gameOver) {
+      // Game is unfinished, abort it.
+      users[socket.id].inGame.abortGame(users[socket.id].player);
+      checkGameOver(users[socket.id].inGame);
+    }
+    socket.leave('game' + users[socket.id].inGame.id);
+    users[socket.id].inGame = null;
+    users[socket.id].player = null;
+    io.to(socket.id).emit('leave');
+  }
+}
 
 function getClientsInRoom(room){
   var clients = [];
