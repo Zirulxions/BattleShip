@@ -31,7 +31,20 @@ io.on('connection', function(socket) {
 
   //shot from client.
   socket.on('shot', function(position) {
-
+    var game = users[socket.id].inGame, opponent;
+    if(game !== null) {
+      // Is it this users turn?
+      if(game.currentPlayer === users[socket.id].player) {
+        opponent = game.currentPlayer === 0 ? 1 : 0;
+        if(game.shoot(position)) {
+          // Valid shot
+          checkGameOver(game);
+          // Update game state on both clients.
+          io.to(socket.id).emit('update', game.getGameState(users[socket.id].player, opponent));
+          io.to(game.getPlayerId(opponent)).emit('update', game.getGameState(opponent, opponent));
+          }
+        }
+      }
   });
 
   //leave game request

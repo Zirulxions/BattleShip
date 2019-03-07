@@ -18,6 +18,21 @@ function Player(id){
   }
 };
 
+Player.prototype.shoot = function(gridIndex) {
+  if(this.shipGrid[gridIndex] >= 0) {
+    // Shot Hit!
+    this.ships[this.shipGrid[gridIndex]].hits++;
+    this.shots[gridIndex] = 2;
+    console.log("Hit...!");
+    return true;
+  } else {
+    // Shot Miss
+    this.shots[gridIndex] = 1;
+    console.log("Missed Shot...");
+    return false;
+  }
+};
+
 Player.prototype.createRandomShips = function() {
   var shipIndex;
   for(shipIndex = 0; shipIndex < Settings.ships.length; shipIndex++){

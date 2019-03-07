@@ -16,4 +16,37 @@ BattleshipGame.prototype.getPlayerId = function(player) {
   return this.players[player].id;
 };
 
+BattleshipGame.prototype.shoot = function(position) {
+  var opponent = this.currentPlayer === 0 ? 1 : 0, gridIndex = position.y * Settings.gridCols + position.x;
+  if(this.players[opponent].shots[gridIndex] === 0 && this.gameStatus === GameStatus.inProgress) {
+    // Square has not been shot at yet.
+    if(!this.players[opponent].shoot(gridIndex)) {
+      // Miss
+      this.switchPlayer();
+    }
+    // Check if game over
+    if(this.players[opponent].getShipsLeft() <= 0) {
+      this.gameStatus = GameStatus.gameOver;
+      this.winningPlayer = opponent === 0 ? 1 : 0;
+    }
+    return true;
+  }
+  return false;
+};
+
+BattleshipGame.prototype.getPlayerId = function(player) {
+  return this.players[player].id;
+};
+
+BattleshipGame.prototype.switchPlayer = function() {
+  this.currentPlayer = this.currentPlayer === 0 ? 1 : 0;
+};
+
+BattleshipGame.prototype.getGrid = function(player, hideShips) {
+  return {
+    shots: this.players[player].shots,
+    ships: hideShips ? this.players[player].getSunkShips() : this.players[player].ships
+  };
+};
+
 module.exports = BattleshipGame;
