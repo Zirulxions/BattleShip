@@ -17,6 +17,26 @@ var Game = (function(){
   context[0] = canvas[0].getContext('2d');
   context[1] = canvas[1].getContext('2d');
 
+  //just an event... Highlight oponent squares if mouse is hover.
+  canvas[1].addEventLisener('mousemove', function(e) {
+    var pos = getCanvasCoordinates(e, canvas[1]);
+    squareHover = getSquare(pos.x, pos.y);
+    drawGrid(1);
+  });
+
+  //Inverted event
+  canvas[1].addEventLisener('mouseout', function(e) {
+    squareHover = { x: -1, y: -1};
+    drawGrid(1);
+  });
+
+  //Fire event
+  canvas[1].addEventLisener('click', function(e) {
+    var pos = getCanvasCoordinates(e, canvas[1]);
+    var square = getSquare(pos.x, pos.y);
+    sendShoot(square);
+  });
+
   function drawSquares(gridIndex){
     var i,j,squareX,squareY;
     context[gridIndex].fillStyle = '#222222'

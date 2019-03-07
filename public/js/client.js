@@ -45,3 +45,7 @@ function sendLeaveRequest(e) {
   e.preventDefault();
   socket.emit('leave');
 }
+
+function sendShot(square) {
+  socket.emit('shot', square);
+}
