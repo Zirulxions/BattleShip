@@ -28,9 +28,10 @@ $(function() {
     $('#game-number').html(gameId);
   });
 
-  //Update Grid and Turn.
+  //Update player's game status
   socket.on('update', function(gameState) {
-
+    Game.setTurn(gameState.turn);
+    Game.updateGrid(gameState.gridIndex, gameState.grid);
   });
 
   //Leave game and join waiting room.

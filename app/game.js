@@ -62,14 +62,6 @@ BattleshipGame.prototype.shoot = function(position) {
   return false;
 };
 
-BattleshipGame.prototype.getPlayerId = function(player) {
-  return this.players[player].id;
-};
-
-BattleshipGame.prototype.switchPlayer = function() {
-  this.currentPlayer = this.currentPlayer === 0 ? 1 : 0;
-};
-
 //Some Settings
 BattleshipGame.prototype.getGameState = function(player, gridOwner) {
   return {
