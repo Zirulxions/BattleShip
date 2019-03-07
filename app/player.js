@@ -16,6 +16,21 @@ function Player(id){
 
 };
 
+Player.prototype.createRandomShips = function() {
+  var shipIndex;
+  for(shipIndex = 0; shipIndex < Settings.ships.length; shipIndex++){
+    this.ships.push(ship);
+  }
+  return true;
+};
+
+Player.prototype.placeShipsRandom = function (Ship, shipIndex) {
+  var tryMax = 25;
+  for(var i = 0; i < tryMax){
+    ship.horizontal = Math.random() < 0.5;
+    console.console.log("Generated times: " + i);
+  }
+};
 
 //Create ships and place them in grid in a prearranged layout
 function createShips() {

@@ -53,6 +53,7 @@ var Game = (function(){
         }
       }
     };
+
   //draw shot s marks
   function drawMarks(gridIndex) {
     var i, j, squareX, squareY;
@@ -80,6 +81,7 @@ var Game = (function(){
         }
       }
     };
+
   //new game
   function initGame() {
     var i;
@@ -93,15 +95,27 @@ var Game = (function(){
     }
     // Reset turn status classes
     $('#turn-status').removeClass('alert-your-turn').removeClass('alert-opponent-turn').removeClass('alert-winner').removeClass('alert-loser');
-    drawGrid(0);
-    drawGrid(1);
   };
+
   function drawGrid(gridIndex) {
     drawSquares(gridIndex);
     drawShips(gridIndex);
     drawMarks(gridIndex);
   };
-  drawGrid(0);//only testing
-  drawGrid(1);//same
-  console.log('llegueaqui');
-});
+
+  function drawSquares(gridIndex) {
+
+  };
+
+  function drawShips(gridIndex){
+
+  };
+
+  function drawMarks(gridIndex) {
+
+  };
+
+  return {
+    'initGame': initGame,
+  };
+})();
