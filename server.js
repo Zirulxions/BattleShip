@@ -20,6 +20,7 @@ http.listen(port, function(){
 
 io.on('connection', function(socket) {
   console.log('User Logged..!');
+  console.log((new Date().toISOString()) + ' ID ' + socket.id);
 
   users[socket.id] = { // create user object for additional data
     inGame: null,
@@ -27,6 +28,21 @@ io.on('connection', function(socket) {
   };
 
   socket.join('waiting room'); // join waiting room until there are enough players to start a new game
+
+  //shot from client.
+  socket.on('shot', function(position) {
+
+  });
+
+  //leave game request
+  socket.on('leave', function() {
+
+  });
+
+  //client disconect
+  socket.on('disconnect', function() {
+
+  });
 
   joinWaitingPlayers();
 });
