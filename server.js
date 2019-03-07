@@ -29,8 +29,21 @@ io.on('connection', function(socket) {
 
   socket.join('waiting room'); // join waiting room until there are enough players to start a new game
 
+  //Chat Messages
   socket.on('chat', function(msg) {
-
+    if(users[socket.id].inGame !== null && msg) {
+      console.log((new Date().toISOString()) + ' Chat message from ' + socket.id + ': ' + msg);
+      // Send message to opponent
+      socket.broadcast.to('game' + users[socket.id].inGame.id).emit('chat', {
+        name: 'Opponent',
+        message: entities.encode(msg),
+      });
+      // Send message to self
+      io.to(socket.id).emit('chat', {
+        name: 'Me',
+        message: entities.encode(msg),
+      });
+    }
   });
 
   //shot from client.
@@ -66,7 +79,7 @@ io.on('connection', function(socket) {
     leaveGame(socket);
     delete users[socket.id];
   });
-  
+
   joinWaitingPlayers();
 });
 

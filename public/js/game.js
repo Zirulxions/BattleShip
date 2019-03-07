@@ -34,7 +34,7 @@ var Game = (function(){
   canvas[1].addEventListener('click', function(e) {
     var pos = getCanvasCoordinates(e, canvas[1]);
     var square = getSquare(pos.x, pos.y);
-    sendShoot(square);
+    sendShot(square);
   });
 
   function getSquare(x, y) {
@@ -98,6 +98,7 @@ var Game = (function(){
     $('.btn-leave-game').click(sendLeaveRequest);
   };
 
+  //Draw grid with squares, ships and shot marks
   function drawGrid(gridIndex) {
     drawSquares(gridIndex);
     drawShips(gridIndex);
