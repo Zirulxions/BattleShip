@@ -37,7 +37,7 @@ $(function() {
   //Change game status to over
   socket.on('gameover', function(isWinner) {
     Game.setGameOver(isWinner);
-  }
+  });
 
   //Leave game and join waiting room.
   socket.on('leave', function() {

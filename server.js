@@ -29,6 +29,10 @@ io.on('connection', function(socket) {
 
   socket.join('waiting room'); // join waiting room until there are enough players to start a new game
 
+  socket.on('chat', function(msg) {
+
+  });
+
   //shot from client.
   socket.on('shot', function(position) {
     var game = users[socket.id].inGame, opponent;
@@ -62,6 +66,7 @@ io.on('connection', function(socket) {
     leaveGame(socket);
     delete users[socket.id];
   });
+  
   joinWaitingPlayers();
 });
 
@@ -105,6 +110,14 @@ function leaveGame(socket) {
     users[socket.id].inGame = null;
     users[socket.id].player = null;
     io.to(socket.id).emit('leave');
+  }
+}
+
+function checkGameOver(game) {
+  if(game.gameStatus === GameStatus.gameOver) {
+    console.log((new Date().toISOString()) + ' Game ID ' + game.id + ' ended.');
+    io.to(game.getWinnerId()).emit('gameover', true);
+    io.to(game.getLoserId()).emit('gameover', false);
   }
 }
 

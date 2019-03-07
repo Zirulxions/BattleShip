@@ -18,20 +18,20 @@ var Game = (function(){
   context[1] = canvas[1].getContext('2d');
 
   //just an event... Highlight oponent squares if mouse is hover.
-  canvas[1].addEventLisener('mousemove', function(e) {
+  canvas[1].addEventListener('mousemove', function(e) {
     var pos = getCanvasCoordinates(e, canvas[1]);
     squareHover = getSquare(pos.x, pos.y);
     drawGrid(1);
   });
 
   //Inverted event
-  canvas[1].addEventLisener('mouseout', function(e) {
+  canvas[1].addEventListener('mouseout', function(e) {
     squareHover = { x: -1, y: -1};
     drawGrid(1);
   });
 
   //Fire event
-  canvas[1].addEventLisener('click', function(e) {
+  canvas[1].addEventListener('click', function(e) {
     var pos = getCanvasCoordinates(e, canvas[1]);
     var square = getSquare(pos.x, pos.y);
     sendShoot(square);
@@ -74,6 +74,17 @@ var Game = (function(){
     drawGrid(player);
   };
 
+  function setTurn(turnState) {
+    if(gameStatus !== GameStatus.gameOver) {
+      turn = turnState;
+      if(turn) {
+        $('#turn-status').removeClass('alert-opponent-turn').addClass('alert-your-turn').html('It\'s your turn!');
+      } else {
+        $('#turn-status').removeClass('alert-your-turn').addClass('alert-opponent-turn').html('Waiting for opponent.');
+      }
+    }
+  };
+
   function setGameOver(isWinner) {
     gameStatus = GameStatus.gameOver;
     turn = false;
@@ -85,7 +96,7 @@ var Game = (function(){
               .addClass('alert-loser').html('You lost. <a href="#" class="btn-leave-game">Play again</a>.');
     }
     $('.btn-leave-game').click(sendLeaveRequest);
-  }
+  };
 
   function drawGrid(gridIndex) {
     drawSquares(gridIndex);
@@ -160,6 +171,7 @@ var Game = (function(){
   return {
     'initGame': initGame,
     'setGameOver': setGameOver,
-    'updateGrid': updateGrid
+    'updateGrid': updateGrid,
+    'setTurn': setTurn
   };
 })();

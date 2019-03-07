@@ -42,7 +42,7 @@ BattleshipGame.prototype.abortGame = function(player) {
   // Opponent win
   this.gameStatus = GameStatus.gameOver;
   this.winningPlayer = player === 0 ? 1 : 0;
-}
+};
 
 BattleshipGame.prototype.shoot = function(position) {
   var opponent = this.currentPlayer === 0 ? 1 : 0, gridIndex = position.y * Settings.gridCols + position.x;
