@@ -34,11 +34,23 @@ Player.prototype.shoot = function(gridIndex) {
 };
 
 Player.prototype.getSunkShips = function() {
-
+  var i, sunkShips = [];
+  for(i = 0; i < this.ships.length; i++) {
+    if(this.ships[i].isSunk()) {
+      sunkShips.push(this.ships[i]);
+    }
+  }
+  return sunkShips;
 }
 
 Player.prototype.getShipsLeft = function() {
-
+  var i, shipCount = 0;
+  for(i = 0; i < this.ships.length; i++) {
+    if(!this.ships[i].isSunk()){
+      shipCount++;
+    }
+  }
+  return shipCount;
 }
 
 Player.prototype.createRandomShips = function() {
@@ -53,15 +65,37 @@ Player.prototype.createRandomShips = function() {
 };
 
 Player.prototype.placeShipsRandom = function (ship, shipIndex) {
-  var tryMax = 25;
+  var tryMax = 25, i, j, gridIndex, xMax, yMax;
   for(var i = 0; i < tryMax){
     ship.horizontal = Math.random() < 0.5;
     console.log("Generated times: " + i);
+    xMax = ship.horizontal ? Settings.gridCols - ship.size + 1 : Settings.gridCols;
+    yMax = ship.horizontal ? Settings.gridRows : Settings.gridRows - ship.size + 1;
+    ship.x = Math.floor(Math.random() * xMax);
+    ship.y = Math.floor(Math.random() * yMax);
+    if(!this.checkShipOverlap(ship) && !this.checkShipAdjacent(ship)) {
+      // success - ship does not overlap or is adjacent to other ships
+      // place ship array-index in shipGrid
+      gridIndex = ship.y * Settings.gridCols + ship.x;
+      for(j = 0; j < ship.size; j++) {
+        this.shipGrid[gridIndex] = shipIndex;
+        gridIndex += ship.horizontal ? 1 : Settings.gridCols;
+      }
+      return true;
+    }
   }
+  return false;
 };
 
 Player.prototype.checkShipOverlap = function(ship) {
-
+  var i, gridIndex = ship.y * Settings.gridCols + ship.x;
+  for(i = 0; i < ship.size; i++) {
+    if(this.shipGrid[gridIndex] >= 0) {
+      return true;
+    }
+    gridIndex += ship.horizontal ? 1 : Settings.gridCols;
+  }
+  return false;
 }
 
 Player.prototype.checkShipAdjacent = function(ship) {
